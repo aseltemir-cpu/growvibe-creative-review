@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оценка рекламных креативов</title>
+<style>
+  :root{
+    --bg:#f3f7f4; --card:#ffffff; --border:#dbe7df; --text:#16241d; --muted:#5c6b62;
+    --accent:#046c4e; --accent-dark:#024a35; --good:#0d8a4f; --warn:#b9860b; --bad:#b3261e;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);}
+  header{background:var(--accent);color:#fff;padding:20px 24px;}
+  header h1{margin:0;font-size:20px;}
+  header p{margin:4px 0 0;font-size:13px;opacity:.9;}
+  nav{display:flex;gap:4px;background:var(--card);border-bottom:1px solid var(--border);padding:0 16px;overflow-x:auto;}
+  nav button{border:none;background:none;padding:14px 16px;font-size:14px;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;}
+  nav button.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;}
+  main{max-width:980px;margin:0 auto;padding:20px 16px 60px;}
+  .tab{display:none;}
+  .tab.active{display:block;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px;}
+  h2{font-size:18px;margin-top:0;}
+  h3{font-size:15px;margin:0 0 8px;}
+  /* timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .step{display:flex;gap:14px;position:relative;padding-bottom:24px;}
+  .step:last-child{padding-bottom:0;}
+  .step .dot-col{display:flex;flex-direction:column;align-items:center;}
+  .dot{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+  .line{flex:1;width:2px;background:var(--border);margin-top:2px;}
+  .step-body{padding-top:2px;}
+  .step-body .role-tag{display:inline-block;background:#e3f1ea;color:var(--accent-dark);font-size:12px;padding:2px 8px;border-radius:12px;margin-top:4px;}
+  .step-body p{margin:6px 0 0;color:var(--muted);font-size:13px;}
+  /* raci table */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{border:1px solid var(--border);padding:8px;text-align:center;}
+  th:first-child,td:first-child{text-align:left;}
+  th{background:#f0f1f4;}
+  .raci-R{background:#e6f4ea;color:var(--good);font-weight:700;}
+  .raci-A{background:#fff4e0;color:var(--warn);font-weight:700;}
+  .raci-C{background:#dcebe3;color:var(--accent-dark);font-weight:700;}
+  .raci-I{background:#f3f4f6;color:var(--muted);font-weight:700;}
+  /* forms */
+  label{display:block;font-size:13px;font-weight:600;margin:14px 0 4px;}
+  input[type=text],input[type=date],textarea,select{
+    width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:inherit;background:#fff;
+  }
+  textarea{resize:vertical;min-height:60px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;}
+  @media (max-width:600px){.grid2{grid-template-columns:1fr;}}
+  .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  button.btn{border:none;border-radius:6px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:600;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-dark);}
+  .btn-secondary{background:#eceef2;color:var(--text);}
+  .btn-secondary:hover{background:#dde0e6;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1c1f26;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;}
+  .toast.show{opacity:1;}
+  /* criteria */
+  .criterion{border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
+  .criterion-title{font-weight:600;font-size:14px;margin-bottom:8px;}
+  .scale{display:flex;gap:6px;margin-bottom:8px;}
+  .scale label{display:flex;align-items:center;gap:4px;font-weight:400;font-size:13px;margin:0;background:#f3f4f6;padding:6px 10px;border-radius:6px;cursor:pointer;flex:1;justify-content:center;}
+  .scale input{margin:0;}
+  .scale label.checked{background:var(--accent);color:#fff;}
+  .result-box{margin-top:18px;padding:14px;border-radius:8px;border:1px solid var(--border);background:#fafbfc;}
+  .verdict{font-weight:700;font-size:16px;padding:4px 0;}
+  .verdict.good{color:var(--good);}
+  .verdict.warn{color:var(--warn);}
+  .verdict.bad{color:var(--bad);}
+  .note{font-size:12px;color:var(--muted);margin-top:4px;}
+  .legal-options label{display:flex;align-items:center;gap:6px;font-weight:400;margin:6px 0;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Оценка рекламных креативов</h1>
+  <p>Процесс согласования, шаблон брифа и оценочная форма — единый инструмент команды</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="process">Процесс и роли</button>
+  <button data-tab="brief">Шаблон брифа</button>
+  <button data-tab="review">Оценочная форма</button>
+</nav>
+
+<main>
+
+<!-- ============ TAB 1: ПРОЦЕСС И РОЛИ ============ -->
+<section class="tab active" id="tab-process">
+
+  <div class="card">
+    <h2>Этапы процесса</h2>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <div class="card">
+    <h2>RACI-матрица</h2>
+    <p class="note">R — выполняет · A — принимает решение (один на этап) · C — консультирует (обязателен вход, без права вето) · I — информируется</p>
+    <div style="overflow-x:auto;">
+      <table id="raci-table"></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Почему начальник бренд-управления и директор маркетинга — это «A» на ревью, а не вне его</h3>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;">
+      Стороны, дающие вход на промежуточных этапах (бренд-менеджер на концепции, дизайнер на продакшне), дают ценный
+      продуктовый и творческий вклад, но не отвечают за итоговое решение по запуску. Их роль — обязательный
+      консультационный или исполнительский вход на своём этапе, а не одобрение всего цикла. Решение по содержанию
+      ревью принимают начальник бренд-управления и директор департамента маркетинга, а финальное согласование —
+      продуктовая команда, на основе агрегированных оценок, а не отдельного мнения.
+      Это разводит ответственность и устраняет неявное вето, которое сегодня тормозит цикл согласования.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Право вето юридического департамента</h3>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;">
+      Юридический/комплаенс-департамент — единственная роль с формальным правом вето. Его заключение фиксируется
+      отдельно от скоринга качества (поле «юридический/комплаенс-риск» в оценочной форме: none / minor / block)
+      и не усредняется с баллами по критериям. Риск уровня <b>block</b> останавливает запуск независимо от среднего балла.
+    </p>
+  </div>
+
+</section>
+
+<!-- ============ TAB 2: ШАБЛОН БРИФА ============ -->
+<section class="tab" id="tab-brief">
+  <div class="card">
+    <h2>Шаблон брифа</h2>
+    <div class="grid2">
+      <div>
+        <label>Название проекта</label>
+        <input type="text" id="b-name" placeholder="Например: Летняя кампания 2026">
+      </div>
+      <div>
+        <label>Ответственный (куратор)</label>
+        <input type="text" id="b-owner" placeholder="ФИО, роль">
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <label>Канал / формат</label>
+        <input type="text" id="b-channel" placeholder="Видео, баннер, email, наружная реклама...">
+      </div>
+      <div>
+        <label>Дедлайн ревью</label>
+        <input type="date" id="b-deadline">
+      </div>
+    </div>
+    <label>Бизнес-цель</label>
+    <textarea id="b-goal" placeholder="Что должен достичь креатив с точки зрения бизнеса"></textarea>
+    <label>Аудитория</label>
+    <textarea id="b-audience" placeholder="Кто целевая аудитория"></textarea>
+    <label>Барьер / инсайт</label>
+    <textarea id="b-insight" placeholder="Какой барьер преодолеваем, на каком инсайте строим сообщение"></textarea>
+    <label>Ключевое сообщение</label>
+    <textarea id="b-message" placeholder="Главная мысль креатива"></textarea>
+    <label>Обязательный CTA</label>
+    <input type="text" id="b-cta" placeholder="Например: Купить со скидкой 20%">
+    <label>Тон голоса / референсы</label>
+    <textarea id="b-tov" placeholder="ToV, примеры референсов"></textarea>
+    <label>Обязательные элементы</label>
+    <textarea id="b-mandatory" placeholder="Лого, дисклеймеры, юридические формулировки и т.д."></textarea>
+    <label>Метрика успеха</label>
+    <input type="text" id="b-metric" placeholder="Например: CTR ≥ 2%, brand lift +5 п.п.">
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="copyBrief()">Скопировать бриф в буфер обмена</button>
+      <button class="btn btn-secondary" onclick="clearForm('tab-brief')">Очистить форму</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAB 3: ОЦЕНОЧНАЯ ФОРМА ============ -->
+<section class="tab" id="tab-review">
+  <div class="card">
+    <h2>Оценочная форма</h2>
+    <div class="grid2">
+      <div>
+        <label>Название креатива</label>
+        <input type="text" id="r-name" placeholder="Например: Летний баннер v2">
+      </div>
+      <div>
+        <label>Ревьюер (имя + роль по RACI)</label>
+        <input type="text" id="r-reviewer" placeholder="Например: Иванова И., Бренд-менеджер (C)">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="criteria-card">
+    <h2>Критерии оценки (1–5)</h2>
+    <div id="criteria-list"></div>
+  </div>
+
+  <div class="card">
+    <h3>Юридический / комплаенс-риск</h3>
+    <p class="note">Не входит в средний балл — фиксируется отдельно.</p>
+    <div class="legal-options" id="legal-options">
+      <label><input type="radio" name="legal" value="none" checked> none — рисков нет</label>
+      <label><input type="radio" name="legal" value="minor"> minor — незначительный риск, можно устранить правкой</label>
+      <label><input type="radio" name="legal" value="block"> block — блокирующий риск, запуск невозможен</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="result-box">
+      <div>Средний балл: <span id="avg-score">—</span></div>
+      <div class="verdict" id="verdict">Заполните оценки по всем критериям</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="copyReview()">Скопировать результат в буфер обмена</button>
+      <button class="btn btn-secondary" onclick="clearForm('tab-review')">Очистить форму</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Tabs ---------- */
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------- Process timeline ---------- */
+const steps = [
+  {title:'Бриф и постановка задачи', role:'Продуктовый менеджер', desc:'Фиксирует цель, аудиторию, барьер, KPI, обязательные элементы.'},
+  {title:'Концепция / сценарий', role:'Бренд-менеджер (A)', desc:'Предлагает направления; смежные стороны дают вход на уровне идеи — самая дешёвая точка правок.'},
+  {title:'Продакшн / монтаж', role:'Дизайнер (R)', desc:'Исполнение без внешних правок, только проверка соответствия брифу.'},
+  {title:'Внутреннее ревью', role:'Начальник бренд-управления и Директор департамента маркетинга', desc:'Черновая версия оценивается через оценочную форму; любой комментарий обязан иметь оценку, тайм-код и структуру факт → влияние → предложение.'},
+  {title:'Финальное согласование', role:'Продуктовая команда', desc:'Юридическое заключение (вето) и решение продуктовой команды на основе агрегированных баллов.'},
+  {title:'Запуск', role:'Бренд-менеджер', desc:'Публикация; дальнейшие изменения только через новый цикл ревью.'}
+];
+const tl = document.getElementById('timeline');
+steps.forEach((s,i)=>{
+  const div = document.createElement('div');
+  div.className='step';
+  div.innerHTML = `
+    <div class="dot-col">
+      <div class="dot">${i+1}</div>
+      ${i<steps.length-1?'<div class="line"></div>':''}
+    </div>
+    <div class="step-body">
+      <h3 style="margin:0;">${s.title}</h3>
+      <span class="role-tag">${s.role}</span>
+      <p>${s.desc}</p>
+    </div>`;
+  tl.appendChild(div);
+});
+
+/* ---------- RACI table ---------- */
+const raciRoles = ['Продуктовый менеджер','Бренд-менеджер','Дизайнер','Начальник бренд-управления','Директор департамента маркетинга','Продуктовая команда','Юридический / комплаенс'];
+const raciStages = ['Бриф','Концепция','Продакшн','Внутр. ревью','Финал. согласование','Запуск'];
+const raciData = [
+  ['A','C','I','I','C','I'],
+  ['C','A','I','C','I','A'],
+  ['I','C','A','I','I','I'],
+  ['I','I','I','A','C','I'],
+  ['I','I','I','A','C','I'],
+  ['I','I','I','I','A','I'],
+  ['I','I','I','C','R','I']
+];
+const table = document.getElementById('raci-table');
+let thead = '<tr><th>Роль</th>' + raciStages.map(s=>`<th>${s}</th>`).join('') + '</tr>';
+let rows = raciRoles.map((role,i)=>{
+  return '<tr><td>'+role+'</td>' + raciData[i].map(v=>`<td class="raci-${v}">${v}</td>`).join('') + '</tr>';
+}).join('');
+table.innerHTML = thead + rows;
+
+/* ---------- Toast ---------- */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+/* ---------- Clear form ---------- */
+function clearForm(tabId){
+  const tab = document.getElementById(tabId);
+  tab.querySelectorAll('input[type=text],input[type=date],textarea').forEach(el=>el.value='');
+  tab.querySelectorAll('input[type=radio]').forEach(el=>el.checked = el.value==='none');
+  if(tabId==='tab-review'){
+    criteria.forEach(c=>{
+      document.getElementById('comment-'+c.key).value='';
+      document.getElementById('timecode-'+c.key).value='';
+      document.querySelectorAll(`input[name=score-${c.key}]`).forEach(r=>r.checked=false);
+    });
+    updateScoreLabels();
+    computeResult();
+  }
+  showToast('Форма очищена');
+}
+
+/* ---------- Brief copy ---------- */
+function copyBrief(){
+  const v = id => document.getElementById(id).value.trim();
+  const text = `БРИФ НА КРЕАТИВ
+Название проекта: ${v('b-name')}
+Ответственный: ${v('b-owner')}
+Канал/формат: ${v('b-channel')}
+Дедлайн ревью: ${v('b-deadline')}
+
+Бизнес-цель: ${v('b-goal')}
+Аудитория: ${v('b-audience')}
+Барьер/инсайт: ${v('b-insight')}
+Ключевое сообщение: ${v('b-message')}
+Обязательный CTA: ${v('b-cta')}
+Тон голоса/референсы: ${v('b-tov')}
+Обязательные элементы: ${v('b-mandatory')}
+Метрика успеха: ${v('b-metric')}`;
+  copyText(text);
+}
+
+/* ---------- Criteria ---------- */
+const criteria = [
+  {key:'goal', title:'Соответствие цели'},
+  {key:'read3', title:'Считываемость за 3 секунды'},
+  {key:'value', title:'Ясность value proposition'},
+  {key:'cta', title:'Заметность CTA'},
+  {key:'tov', title:'Соответствие ToV'},
+  {key:'tech', title:'Техническое качество'}
+];
+const list = document.getElementById('criteria-list');
+criteria.forEach(c=>{
+  const div = document.createElement('div');
+  div.className='criterion';
+  div.innerHTML = `
+    <div class="criterion-title">${c.title}</div>
+    <div class="scale" id="scale-${c.key}">
+      ${[1,2,3,4,5].map(n=>`
+        <label for="score-${c.key}-${n}">
+          <input type="radio" name="score-${c.key}" id="score-${c.key}-${n}" value="${n}">
+          ${n}
+        </label>`).join('')}
+    </div>
+    <label style="margin-top:0;">Тайм-код / место в материале</label>
+    <input type="text" id="timecode-${c.key}" placeholder="Например: 00:05, верхний баннер">
+    <label style="margin-top:8px;">Комментарий (факт → влияние → предложение)</label>
+    <textarea id="comment-${c.key}" placeholder="Факт: ... Влияние: ... Предложение: ..."></textarea>
+  `;
+  list.appendChild(div);
+});
+
+list.addEventListener('change', e=>{
+  if(e.target.type==='radio'){ updateScoreLabels(); computeResult(); }
+});
+function updateScoreLabels(){
+  criteria.forEach(c=>{
+    document.querySelectorAll(`#scale-${c.key} label`).forEach(l=>{
+      const input = l.querySelector('input');
+      l.classList.toggle('checked', input.checked);
+    });
+  });
+}
+
+function computeResult(){
+  let total=0, count=0;
+  criteria.forEach(c=>{
+    const checked = document.querySelector(`input[name=score-${c.key}]:checked`);
+    if(checked){ total += parseInt(checked.value); count++; }
+  });
+  const avgEl = document.getElementById('avg-score');
+  const verdictEl = document.getElementById('verdict');
+  if(count < criteria.length){
+    avgEl.textContent = '—';
+    verdictEl.textContent = 'Заполните оценки по всем критериям';
+    verdictEl.className='verdict';
+    return null;
+  }
+  const avg = total/count;
+  avgEl.textContent = avg.toFixed(2);
+  let verdictText, cls;
+  if(avg>=4.0){ verdictText='Готово к запуску'; cls='good'; }
+  else if(avg>=3.0){ verdictText='Требует правок'; cls='warn'; }
+  else { verdictText='Существенная переработка'; cls='bad'; }
+  verdictEl.textContent = verdictText;
+  verdictEl.className = 'verdict '+cls;
+  return {avg, verdictText};
+}
+
+/* ---------- Review copy ---------- */
+function copyReview(){
+  const result = computeResult();
+  const name = document.getElementById('r-name').value.trim();
+  const reviewer = document.getElementById('r-reviewer').value.trim();
+  const legal = document.querySelector('input[name=legal]:checked').value;
+
+  let lines = [`ОЦЕНКА КРЕАТИВА: ${name}`, `Ревьюер: ${reviewer}`, ''];
+  criteria.forEach(c=>{
+    const checked = document.querySelector(`input[name=score-${c.key}]:checked`);
+    const score = checked ? checked.value : '—';
+    const timecode = document.getElementById('timecode-'+c.key).value.trim();
+    const comment = document.getElementById('comment-'+c.key).value.trim();
+    lines.push(`${c.title}: ${score}/5 | Тайм-код: ${timecode || '—'}`);
+    lines.push(`  Комментарий: ${comment || '—'}`);
+  });
+  lines.push('');
+  lines.push(`Юридический/комплаенс-риск: ${legal}`);
+  if(result){
+    lines.push(`Средний балл: ${result.avg.toFixed(2)}`);
+    lines.push(`Вердикт: ${result.verdictText}`);
+  } else {
+    lines.push('Средний балл: не рассчитан (заполните все критерии)');
+  }
+  copyText(lines.join('\n'));
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    showToast('Скопировано в буфер обмена');
+  }).catch(()=>{
+    showToast('Не удалось скопировать');
+  });
+}
+</script>
+</body>
+</html>
