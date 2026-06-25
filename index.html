@@ -34,6 +34,8 @@
   .intro-toggle.open .chevron{transform:rotate(180deg);}
   .intro-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
   .intro-body p{color:var(--muted);font-size:14px;line-height:1.7;margin:14px 0 0;}
+  .intro-body mark{background:#e3f1ea;color:var(--accent-dark);font-weight:600;padding:1px 4px;border-radius:4px;}
+  .intro-body .intro-list li b{color:var(--accent-dark);}
   .intro-body .intro-list{color:var(--muted);font-size:14px;line-height:1.7;margin:10px 0 0;padding-left:0;list-style:none;}
   .intro-body .intro-list li{margin-bottom:6px;padding-left:26px;position:relative;}
   .intro-body .intro-list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--accent-dark);font-weight:900;font-size:1.6em;line-height:1;-webkit-text-stroke:1px var(--accent-dark);}
@@ -175,18 +177,18 @@
     </button>
     <div class="intro-body open" id="intro-body">
       <p>
-        Сейчас оценка креативов часто превращается в обмен мнениями, без привязки к месту в материале,
-        к цели кампании и без конкретного предложения по правке. В результате цикл согласования растягивается, а решение
-        о запуске принимается на основе субъективных впечатлений, а не критериев.
+        Сейчас оценка креативов часто превращается в <mark>обмен мнениями</mark>, без привязки к месту в материале,
+        к цели кампании и без конкретного предложения по правке. В результате <mark>цикл согласования растягивается</mark>,
+        а решение о запуске принимается на основе <mark>субъективных впечатлений, а не критериев</mark>.
       </p>
       <p>Данный процесс и инструмент решают три задачи:</p>
       <ul class="intro-list">
-        <li>Чётко разводят роли — кто принимает решение, кто консультирует, кто информируется</li>
-        <li>Привязывают любую оценку к цели, зафиксированной в брифе до старта работы</li>
-        <li>Переводят обратную связь в обязательный формат — оценка, тайм-код, факт → влияние → предложение — вместо общего впечатления</li>
+        <li><b>Разводят роли</b> — кто принимает решение, кто консультирует, кто информируется</li>
+        <li><b>Привязывают оценку к цели</b>, зафиксированной в брифе до старта работы</li>
+        <li><b>Переводят фидбэк в обязательный формат</b> — оценка, тайм-код, факт → влияние → предложение — вместо общего впечатления</li>
       </ul>
       <p style="margin-bottom:0;">
-        На выходе — однозначный вердикт (готово / требует правок / на переработку) и более короткий, предсказуемый цикл согласования.
+        На выходе — <mark>однозначный вердикт</mark> (готово / требует правок / на переработку) и более короткий, предсказуемый цикл согласования.
       </p>
     </div>
   </div>
