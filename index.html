@@ -96,8 +96,9 @@
   /* criteria */
   .criterion{border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
   .criterion-title{font-weight:600;font-size:14px;margin-bottom:8px;}
+  .criterion-icon{margin-right:8px;font-size:16px;}
   .scale{display:flex;gap:6px;margin-bottom:8px;}
-  .scale label{display:flex;align-items:center;gap:4px;font-weight:400;font-size:13px;margin:0;background:#f3f4f6;padding:6px 10px;border-radius:6px;cursor:pointer;flex:1;justify-content:center;}
+  .scale label{display:flex;align-items:center;gap:4px;font-weight:600;font-size:13px;margin:0;background:#e3f1ea;color:var(--accent-dark);padding:6px 10px;border-radius:6px;cursor:pointer;flex:1;justify-content:center;}
   .scale input{margin:0;}
   .scale label.checked{background:var(--accent);color:#fff;}
   .result-box{margin-top:18px;padding:14px;border-radius:8px;border:1px solid var(--border);background:#fafbfc;}
@@ -471,19 +472,19 @@ function downloadBriefCSV(){
 
 /* ---------- Criteria ---------- */
 const criteria = [
-  {key:'goal', title:'Соответствие цели'},
-  {key:'read3', title:'Считываемость за 3 секунды'},
-  {key:'value', title:'Ясность value proposition'},
-  {key:'cta', title:'Заметность CTA'},
-  {key:'tov', title:'Соответствие ToV'},
-  {key:'tech', title:'Техническое качество'}
+  {key:'goal', title:'Соответствие цели', icon:'🎯'},
+  {key:'read3', title:'Считываемость за 3 секунды', icon:'⏱️'},
+  {key:'value', title:'Ясность value proposition', icon:'💡'},
+  {key:'cta', title:'Заметность CTA', icon:'👆'},
+  {key:'tov', title:'Соответствие ToV', icon:'🗣️'},
+  {key:'tech', title:'Техническое качество', icon:'⚙️'}
 ];
 const list = document.getElementById('criteria-list');
 criteria.forEach(c=>{
   const div = document.createElement('div');
   div.className='criterion';
   div.innerHTML = `
-    <div class="criterion-title">${c.title}</div>
+    <div class="criterion-title"><span class="criterion-icon" aria-hidden="true">${c.icon}</span>${c.title}</div>
     <div class="scale" id="scale-${c.key}">
       ${[1,2,3,4,5].map(n=>`
         <label for="score-${c.key}-${n}">
