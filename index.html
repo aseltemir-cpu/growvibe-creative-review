@@ -83,7 +83,11 @@
   .raci-C{background:#024a35;color:#ffffff;box-shadow:0 0 0 3px rgba(2,74,53,.25),0 2px 6px rgba(2,74,53,.45);}
   .raci-I{background:transparent;color:#000000;box-shadow:0 0 0 1.5px rgba(0,0,0,.3);}
   /* forms */
-  label{display:block;font-size:13px;font-weight:600;margin:14px 0 4px;}
+  label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;margin:14px 0 4px;}
+  .field-icon{width:16px;height:16px;flex-shrink:0;color:var(--accent-dark);}
+  .field-highlight{position:relative;border-left:3px solid var(--accent);background:#f3faf6;border-radius:0 8px 8px 0;padding:12px 14px 14px;margin:14px 0;}
+  .field-highlight label{margin-top:0;}
+  .field-badge{display:inline-block;background:#e3f1ea;color:var(--accent-dark);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:10px;margin-bottom:8px;}
   input[type=text],input[type=date],textarea,select{
     width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:inherit;background:#fff;
   }
@@ -221,40 +225,63 @@
     <h2>Шаблон брифа</h2>
     <div class="grid2">
       <div>
-        <label>Название проекта</label>
+        <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 H14 L18 7 V21 H7 Z"/><path d="M14 3 V7 H18"/></svg>Название проекта</label>
         <input type="text" id="b-name" placeholder="Например: Летняя кампания 2026">
       </div>
       <div>
-        <label>Ответственный (куратор)</label>
+        <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20 C5 15.5 8 13.5 12 13.5 C16 13.5 19 15.5 19 20"/></svg>Ответственный (куратор)</label>
         <input type="text" id="b-owner" placeholder="ФИО, роль">
       </div>
     </div>
     <div class="grid2">
       <div>
-        <label>Канал / формат</label>
+        <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 L13 5 V19 L3 14 Z"/><path d="M3 10 V14 M13 7 C17 8.5 20 8.5 21 7.5 V16.5 C20 15.5 17 15.5 13 17"/></svg>Канал / формат</label>
         <input type="text" id="b-channel" placeholder="Видео, баннер, email, наружная реклама...">
       </div>
       <div>
-        <label>Дедлайн ревью</label>
+        <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="15" rx="1.5"/><path d="M4 10 H20 M8 3 V7 M16 3 V7"/></svg>Дедлайн ревью</label>
         <input type="date" id="b-deadline">
       </div>
     </div>
-    <label>Бизнес-цель</label>
-    <textarea id="b-goal" placeholder="Что должен достичь креатив с точки зрения бизнеса"></textarea>
-    <label>Аудитория</label>
+
+    <div class="field-highlight">
+      <span class="field-badge">Ключевое поле</span>
+      <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.8"/><circle cx="12" cy="12" r="1"/></svg>Бизнес-цель</label>
+      <textarea id="b-goal" placeholder="Что должен достичь креатив с точки зрения бизнеса"></textarea>
+    </div>
+
+    <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20 C3 16 5.5 14 9 14 C12.5 14 15 16 15 20"/><circle cx="17" cy="9" r="2.3"/><path d="M21 19 C21 16 19.3 14.5 17 14.3"/></svg>Аудитория</label>
     <textarea id="b-audience" placeholder="Кто целевая аудитория"></textarea>
-    <label>Барьер / инсайт</label>
-    <textarea id="b-insight" placeholder="Какой барьер преодолеваем, на каком инсайте строим сообщение"></textarea>
-    <label>Ключевое сообщение</label>
-    <textarea id="b-message" placeholder="Главная мысль креатива"></textarea>
-    <label>Обязательный CTA</label>
-    <input type="text" id="b-cta" placeholder="Например: Купить со скидкой 20%">
-    <label>Тон голоса / референсы</label>
+
+    <div class="field-highlight">
+      <span class="field-badge">Ключевое поле</span>
+      <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 C8 3 5.5 5.6 5.5 9 C5.5 11.6 7 13 8 14.2 C8.6 15 9 15.6 9 16.5 L15 16.5 C15 15.6 15.4 15 16 14.2 C17 13 18.5 11.6 18.5 9 C18.5 5.6 16 3 12 3 Z"/><path d="M9 19 L15 19 M10 21.5 L14 21.5"/></svg>Барьер / инсайт</label>
+      <textarea id="b-insight" placeholder="Какой барьер преодолеваем, на каком инсайте строим сообщение"></textarea>
+    </div>
+
+    <div class="field-highlight">
+      <span class="field-badge">Ключевое поле</span>
+      <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5 H20 V15 H10.5 L6.5 18.5 V15 H4 Z"/><path d="M8 9.5 H16 M8 12 H13"/></svg>Ключевое сообщение</label>
+      <textarea id="b-message" placeholder="Главная мысль креатива"></textarea>
+    </div>
+
+    <div class="field-highlight">
+      <span class="field-badge">Ключевое поле</span>
+      <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 L9 16.5 L12 14 L14.5 19.5 L17 18.3 L14.5 13 L18.5 12.5 Z"/></svg>Обязательный CTA</label>
+      <input type="text" id="b-cta" placeholder="Например: Купить со скидкой 20%">
+    </div>
+
+    <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13 V11 C5 8 7 5 12 5 C17 5 19 8 19 11 V13"/><path d="M3 13 H6 V18 H3 Z M18 13 H21 V18 H18 Z"/></svg>Тон голоса / референсы</label>
     <textarea id="b-tov" placeholder="ToV, примеры референсов"></textarea>
-    <label>Обязательные элементы</label>
+
+    <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6 H19 M5 12 H19 M5 18 H13"/><path d="M3 6 L3.01 6 M3 12 L3.01 12 M3 18 L3.01 18"/></svg>Обязательные элементы</label>
     <textarea id="b-mandatory" placeholder="Лого, дисклеймеры, юридические формулировки и т.д."></textarea>
-    <label>Метрика успеха</label>
-    <input type="text" id="b-metric" placeholder="Например: CTR ≥ 2%, brand lift +5 п.п.">
+
+    <div class="field-highlight">
+      <span class="field-badge">Ключевое поле</span>
+      <label><svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 V4 M4 20 H20"/><path d="M7 17 V12 M12 17 V8 M17 17 V14"/></svg>Метрика успеха</label>
+      <input type="text" id="b-metric" placeholder="Например: CTR ≥ 2%, brand lift +5 п.п.">
+    </div>
 
     <div class="actions">
       <button class="btn btn-primary" onclick="copyBrief()">Скопировать бриф в буфер обмена</button>
