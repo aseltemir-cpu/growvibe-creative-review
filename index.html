@@ -10,7 +10,13 @@
     --accent:#046c4e; --accent-dark:#024a35; --good:#0d8a4f; --warn:#b9860b; --bad:#b3261e;
   }
   *{box-sizing:border-box;}
-  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--bg) url("assets/almaty-skyline.svg") no-repeat center bottom fixed;background-size:cover;color:var(--text);}
+  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);
+    background-color:var(--bg);
+    background-image:
+      linear-gradient(rgba(4,108,78,.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(4,108,78,.14) 1px, transparent 1px);
+    background-size:24px 24px;
+  }
   header{background:var(--accent);color:#fff;padding:20px 24px;display:flex;align-items:center;gap:16px;}
   header img.logo{height:32px;width:auto;flex-shrink:0;}
   header .header-text{flex:1;}
