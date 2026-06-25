@@ -10,11 +10,11 @@
     --accent:#046c4e; --accent-dark:#024a35; --good:#0d8a4f; --warn:#b9860b; --bad:#b3261e;
   }
   *{box-sizing:border-box;}
-  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);}
+  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--bg) url("assets/ornament-pattern.svg") repeat;color:var(--text);}
   header{background:var(--accent);color:#fff;padding:20px 24px;display:flex;align-items:center;gap:16px;}
   header img.logo{height:32px;width:auto;flex-shrink:0;}
   header .header-text{flex:1;}
-  header h1{margin:0;font-size:20px;}
+  header h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.01em;}
   header p{margin:4px 0 0;font-size:13px;opacity:.9;}
   footer{max-width:980px;margin:0 auto;padding:24px 16px 40px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);}
   footer img.logo{height:20px;width:auto;}
@@ -97,7 +97,7 @@
 
   @media (max-width:480px){
     header{padding:16px 14px;}
-    header h1{font-size:17px;}
+    header h1{font-size:20px;}
     header p{font-size:12px;}
     nav button{padding:12px 10px;font-size:15px;}
     main{padding:14px 10px 50px;}
