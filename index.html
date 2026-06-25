@@ -270,6 +270,7 @@
 
     <div class="actions">
       <button class="btn btn-primary" onclick="copyBrief()">Скопировать бриф в буфер обмена</button>
+      <button class="btn btn-secondary" onclick="downloadBriefCSV()">Скачать таблицей</button>
       <button class="btn btn-secondary" onclick="clearForm('tab-brief')">Очистить форму</button>
     </div>
   </div>
@@ -433,6 +434,39 @@ function copyBrief(){
 Обязательные элементы: ${v('b-mandatory')}
 Метрика успеха: ${v('b-metric')}`;
   copyText(text);
+}
+
+function downloadBriefCSV(){
+  const v = id => document.getElementById(id).value.trim();
+  const header = ['Поле','Значение'];
+  const rows = [
+    ['Название проекта', v('b-name')],
+    ['Ответственный', v('b-owner')],
+    ['Канал/формат', v('b-channel')],
+    ['Дедлайн ревью', v('b-deadline')],
+    ['Бизнес-цель', v('b-goal')],
+    ['Аудитория', v('b-audience')],
+    ['Барьер/инсайт', v('b-insight')],
+    ['Ключевое сообщение', v('b-message')],
+    ['Обязательный CTA', v('b-cta')],
+    ['Тон голоса/референсы', v('b-tov')],
+    ['Обязательные элементы', v('b-mandatory')],
+    ['Метрика успеха', v('b-metric')]
+  ];
+  const csvLines = [header, ...rows].map(row => row.map(csvEscape).join(','));
+  const csvContent = '﻿' + csvLines.join('\r\n');
+
+  const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (v('b-name') || 'brief').replace(/[^a-zA-Zа-яА-ЯёЁ0-9_-]+/g, '_');
+  a.href = url;
+  a.download = `brief_${safeName}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Файл скачан');
 }
 
 /* ---------- Criteria ---------- */
