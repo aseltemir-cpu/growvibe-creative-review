@@ -280,6 +280,7 @@
     </div>
     <div class="actions">
       <button class="btn btn-primary" onclick="copyReview()">Скопировать результат в буфер обмена</button>
+      <button class="btn btn-secondary" onclick="downloadReviewCSV()">Скачать таблицей (CSV)</button>
       <button class="btn btn-secondary" onclick="clearForm('tab-review')">Очистить форму</button>
     </div>
   </div>
@@ -487,6 +488,44 @@ function copyReview(){
     lines.push('Средний балл: не рассчитан (заполните все критерии)');
   }
   copyText(lines.join('\n'));
+}
+
+/* ---------- Review CSV download ---------- */
+function csvEscape(value){
+  const v = String(value ?? '');
+  return '"' + v.replace(/"/g, '""') + '"';
+}
+
+function downloadReviewCSV(){
+  const result = computeResult();
+  const name = document.getElementById('r-name').value.trim();
+  const reviewer = document.getElementById('r-reviewer').value.trim();
+  const legal = document.querySelector('input[name=legal]:checked').value;
+
+  const header = ['Название креатива','Ревьюер','Критерий','Оценка (1-5)','Тайм-код / место','Комментарий (факт → влияние → предложение)','Юридический риск','Средний балл','Вердикт'];
+  const rows = criteria.map(c=>{
+    const checked = document.querySelector(`input[name=score-${c.key}]:checked`);
+    const score = checked ? checked.value : '';
+    const timecode = document.getElementById('timecode-'+c.key).value.trim();
+    const comment = document.getElementById('comment-'+c.key).value.trim();
+    return [name, reviewer, c.title, score, timecode, comment, legal,
+            result ? result.avg.toFixed(2) : '', result ? result.verdictText : ''];
+  });
+
+  const csvLines = [header, ...rows].map(row => row.map(csvEscape).join(','));
+  const csvContent = '﻿' + csvLines.join('\r\n');
+
+  const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (name || 'oczenka').replace(/[^a-zA-Zа-яА-ЯёЁ0-9_-]+/g, '_');
+  a.href = url;
+  a.download = `oczenka_${safeName}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Файл скачан');
 }
 
 function copyText(text){
