@@ -28,6 +28,13 @@
   .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px;}
   h2{font-size:18px;margin-top:0;}
   h3{font-size:15px;margin:0 0 8px;}
+  /* intro toggle */
+  .intro-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;padding:0;margin:0;font-size:16px;font-weight:600;color:var(--text);cursor:pointer;text-align:left;}
+  .intro-toggle .chevron{transition:transform .2s;font-style:normal;color:var(--accent);font-size:16px;}
+  .intro-toggle.open .chevron{transform:rotate(180deg);}
+  .intro-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .intro-body p{color:var(--muted);font-size:14px;line-height:1.7;margin:14px 0 0;}
+  .intro-body.open{max-height:600px;}
   /* timeline */
   .timeline{display:flex;flex-direction:column;gap:0;}
   .step{display:flex;gap:14px;position:relative;padding-bottom:24px;}
@@ -157,6 +164,27 @@
 
 <!-- ============ TAB 1: ПРОЦЕСС И РОЛИ ============ -->
 <section class="tab active" id="tab-process">
+
+  <div class="card">
+    <button class="intro-toggle open" id="intro-toggle" onclick="toggleIntro()">
+      <span>Зачем этот процесс: краткое объяснение</span>
+      <i class="chevron" id="intro-chevron">▾</i>
+    </button>
+    <div class="intro-body open" id="intro-body">
+      <p>
+        Сейчас оценка креативов часто превращается в обмен мнениями: «не выглядит продающим», без привязки к месту в материале,
+        к цели кампании и без конкретного предложения по правке. В результате цикл согласования растягивается, а решение
+        о запуске принимается на основе субъективных впечатлений, а не критериев.
+      </p>
+      <p style="margin-bottom:0;">
+        Этот процесс и инструмент решают три вещи: <b>(1)</b> чётко разводят роли — кто принимает решение, кто консультирует,
+        кто только информируется; <b>(2)</b> привязывают любую оценку к цели, зафиксированной в брифе до старта работы;
+        <b>(3)</b> переводят обратную связь в обязательный формат — оценка, тайм-код, факт → влияние → предложение —
+        вместо общего впечатления. На выходе — однозначный вердикт (готово / требует правок / на переработку) и более
+        короткий, предсказуемый цикл согласования.
+      </p>
+    </div>
+  </div>
 
   <div class="card">
     <h2>Этапы процесса</h2>
@@ -296,6 +324,12 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ---------- Intro toggle ---------- */
+function toggleIntro(){
+  document.getElementById('intro-toggle').classList.toggle('open');
+  document.getElementById('intro-body').classList.toggle('open');
+}
+
 /* ---------- Tabs ---------- */
 document.querySelectorAll('nav button').forEach(btn=>{
   btn.addEventListener('click',()=>{
